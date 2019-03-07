@@ -1,0 +1,54 @@
+{% extends 'main.html' %}
+
+{% block navi %}
+
+<div class="row">
+  <a href="/sing_up/" class="btn btn-primary fill_container">Sing up</a> </br>
+</div>
+<div class="row">
+  <a href="/log_in/" class="btn btn-primary fill_container">Log in</a> </br>
+</div>
+<div class="row">
+  <a href="/messeges/" class="btn btn-primary fill_container">Messeges</a> </br>
+</div>
+
+
+
+{% endblock %}
+
+{% block content %}
+
+  <p>
+
+    <div class="jumbotron">
+
+      <p> <strong> Just fill form and create account on our site: </strong></p>
+        <p>
+          <form class="from-group" action="/sing_up/" method="POST">
+             {% csrf_token %}
+                <p><strong><div class="text-primary">Username: </div></strong><input style="width: 100%;" type="text" name="usernameinput" > </input> </p>
+
+                {% if username_error %}
+                <div class="text-danger"> {{username_error}} </div>
+                {% endif %}
+
+                <p><strong><div class="text-primary">Password: </div></strong><input style="width: 60%;" type="password" name="password" > </input>
+
+                  {% if password_error %}
+                  <div class="text-danger"> {{password_error}} </div>
+                  {% endif %}
+
+                <strong><div class="text-primary">Confirm Password: </div></strong><input style="width: 60%;" type="password" name="cpassword" > </input> </p>
+                  {% if cpassword_error %}
+                  <div class="text-danger"> {{cpassword_error}} </div>
+                  {% endif %}
+                <div class="float-right"> <input type="submit" class="btn btn-success" value="Create"></input> </div>
+
+          </form>
+        </p>
+
+    </div>
+
+    </p>
+
+{% endblock %}

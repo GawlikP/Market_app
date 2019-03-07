@@ -19,8 +19,17 @@ class User(models.Model):
     class Meta:
         verbose_name_plural = 'User'
 
+class Type(models.Model):
+    name = models.CharField(max_length = 400)
+
+    def __str__(self):
+        return self.name;
+    class Meta:
+        verbose_name_plural = 'Type'
+
 class Product(models.Model):
     name = models.CharField(max_length = 500)
+    type = models.ForeignKey(Type,null=True,related_name='Type',on_delete=models.SET_NULL)
     description = models.CharField(max_length = 500)
     QUALITY_CHOICES = (
         ('NEW','NEW'),
