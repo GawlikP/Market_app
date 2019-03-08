@@ -11,12 +11,15 @@ from .psValidator import PSWvalid
 def index(response):
 
     user_name = None
+    user_id = None
 
     if response.session.get('user_id'):
         usr = User.objects.get(pk=response.session.get('user_id'))
         user_name = usr.username
+        user_id = usr.id
 
     context = {
+        'user_id': user_id,
         'user_name': user_name,
         'title' : 'Main'
     }
@@ -99,3 +102,24 @@ def log_out(response):
     except KeyError:
         pass
     return HttpResponseRedirect("/")
+
+def profile(response,id):
+
+    user = None
+
+    if not User.objects.filter(id= id):
+        return HttpResponse('Error there is no user with' + id + " id");
+    else:
+        user = User.objects.get(id= id)
+
+    context = {
+        'user': user,
+        'title': 'Profile'
+    }
+
+    return render(response,'profile.html',context)
+
+def add_product(response):
+
+
+    return HttpResponse('Add product')

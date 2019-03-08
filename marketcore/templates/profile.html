@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+
+{% block navi %}
+
+<div class="row">
+<a href="/sing_up/" class="btn btn-primary fill_container">Sing up</a> </br>
+</div>
+<div class="row">
+<a href="/log_in/" class="btn btn-primary fill_container">Log in</a> </br>
+</div>
+<div class="row">
+<a href="/log_out/" class="btn btn-primary fill_container">Log out</a> </br>
+</div>
+<div class="row">
+<a href="/messeges/" class="btn btn-primary fill_container">Messeges</a> </br>
+</div>
+
+{% endblock %}
+
+{% block content %}
+  <br>
+  <div class="jumbotron">
+      <div class="text-primary">
+    <h1><p>Username: {{user.username}} </p></h1>
+    <h2><p>Points: {{user.points}} </p> </h2>
+    </div>
+    <hr>
+    <p> <h2 class="btn btn-success"> ADD PRODUCT </h2></p>
+
+  </div>
+
+
+{% endblock %}

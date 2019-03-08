@@ -28,9 +28,11 @@
                   <a href="/" class="btn btn-success"  id="MainSiteButton">Main Site</a>
               </div>
               <hr>
+              {% if user_id %}
               <div class="row">
-                  <a href="/profile/" class="btn btn-primary" style="height: 100%; width: 100%;">Profile</a>
+                  <a href="/profile/{{user.id}}" class="btn btn-primary" style="height: 100%; width: 100%;">Profile</a>
               </div>
+              {% endif%}
               {% if user_name %}
               <div class="row">
                   <div class="btn btn-warning" style="width:100%; height: 100%"> {{user_name}} </div>
