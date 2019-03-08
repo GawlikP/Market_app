@@ -93,3 +93,9 @@ def log_in(response):
     }
 
     return render(response,'login.html',context)
+def log_out(response):
+    try:
+        del response.session['user_id']
+    except KeyError:
+        pass
+    return HttpResponseRedirect("/")
