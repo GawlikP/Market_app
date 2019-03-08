@@ -4,9 +4,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth.hashers import make_password, check_password
 
-from .models import User
+from .models import User, Type, Product
 
 from .psValidator import PSWvalid
+
+from .forms import UploadFileForm
 
 def index(response):
 
@@ -129,7 +131,42 @@ def profile(response,id):
 
 def add_product(response):
 
+    types = None
+
+    if not response.session['user_id']:
+        return HttpResponse('You need to be loged in');
+    else:
+        if response.method == 'POST' and response.FILES['myfile']:
+            print('post geted')
+            print('form too')
+            name = response.POST.get('productnameinput','')
+            description = response.POST.get('productdescriptioninput','')
+            type = response.POST.get('typeinput','')
+            quality = response.POST.get('quialityinput','')
+            myfile = response.FILES['myfile']
+        # =request.FILES['file']
+            price = response.POST.get('pricefield')
+            price = float(price)
+            type = Type.objects.get(id=type);
+            seller = User.objects.get(id=response.session.get('user_id'))
+            product = Product.objects.create(name=name,type=type,description= description, quality='NEW',price=price, seller=seller,image=myfile)
+            print(product)
+            product.save()
+            print(name)
+            print(description)
+            print(type)
+            print(quality)
+            print(price)
+            #if product:
+                #HttpResponseRedirect()
+
+    types = Type.objects.all();
+
+    context = {
+
+        'types': types,
+        'title': 'Adding product'
+    }
 
 
-
-    return render(response,'add_product.html')
+    return render(response,'add_product.html',context)

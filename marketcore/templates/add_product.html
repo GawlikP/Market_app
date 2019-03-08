@@ -18,31 +18,30 @@
       <div class="row alert alert-primary " style="width: 100%; height: 100%;"> <center> Market App </center> </div>
 
       <div class="row">
-        <div class="col-md-6 offset-md-3">
         <div class="d-flex justify-content-center jumbotron " style="width: 100%; height:100%">
               <center>
                 <h1 class="alert-warning"> Product Add From </h1>
-                <form class="form-group"  method="POST" action="/add_product/">
-                      <p><input type="text" class="form-control" name="productnameinput" placeholder="Product name" style="width: 100%; height:100%"> </input> </p>
-                    <textarea textarea class="form-control" placeholder="Description" name="productdescriptioninput" rows="5"></textarea>
-                    <select class="custom-select" name="selectinput">
+                <form class="form-group"  method="POST" enctype="multipart/form-data" action="/add_product/">
+                      {% csrf_token %}
+                      <p><input type="text" required class="form-control" name="productnameinput" placeholder="Product name" style="width: 100%; height:100%"> </input> </p>
+                    <textarea textarea required class="form-control" placeholder="Description" name="productdescriptioninput" rows="5"></textarea>
+                      <input type="file" required name="myfile"> </input>
+                    <select class="custom-select" name="typeinput">
                       <option selected>Type</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                      {% for t in types %}
+                        <option value="{{t.id}}"> {{t.name}}</option>
+                      {% endfor%}
                     </select>
-                    <select class="custom-select" name="selectinput">
+                    <select class="custom-select" name="quialityinput">
                       <option selected>Quality</option>
                       <option value="1">One</option>
                       <option value="2">Two</option>
                       <option value="3">Three</option>
                     </select>
-                <p>Image: <input type="file" class="form-group" name="fileinput"> </input> </p>
-                    <p><input type="number" class="form-group" placeholder="0.0" style="width: 100%"  name="pricefield"> </input> </p>
+                    <p><input type="number" required class="form-group" placeholder="price" style="width: 100%"  name="pricefield"> </input> </p>
                     <p><input type="submit" class="btn btn-primary" value="Add product" style="width:100%"></input> </p>
                 </form>
               </center>
-          </div>
         </div>
       </div>
 
