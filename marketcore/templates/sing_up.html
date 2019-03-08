@@ -21,24 +21,24 @@
   <p>
 
     <div class="jumbotron">
-
+      {% if not user %}
       <p> <strong> Just fill form and create account on our site: </strong></p>
         <p>
           <form class="from-group" action="/sing_up/" method="POST">
-             {% csrf_token %}
-                <p><strong><div class="text-primary">Username: </div></strong><input style="width: 100%;" type="text" name="usernameinput" > </input> </p>
+            {% csrf_token %}
+                <p><strong><div class="text-primary">Username: </div></strong><input style="width: 100%;" type="text" name="usernameinput" value="{% if usr %}{{usr}}{% endif %}" > </input> </p>
 
                 {% if username_error %}
                 <div class="text-danger"> {{username_error}} </div>
                 {% endif %}
 
-                <p><strong><div class="text-primary">Password: </div></strong><input style="width: 60%;" type="password" name="password" > </input>
+                <p><strong><div class="text-primary">Password: </div></strong><input style="width: 60%;" type="password" name="password" value="{% if psw %}{{psw}}{% endif %}"> </input>
 
                   {% if password_error %}
                   <div class="text-danger"> {{password_error}} </div>
                   {% endif %}
 
-                <strong><div class="text-primary">Confirm Password: </div></strong><input style="width: 60%;" type="password" name="cpassword" > </input> </p>
+                <strong><div class="text-primary">Confirm Password: </div></strong><input style="width: 60%;" type="password" name="cpassword" value="{% if cpsw %}{{cpsw}}{% endif %}"> </input> </p>
                   {% if cpassword_error %}
                   <div class="text-danger"> {{cpassword_error}} </div>
                   {% endif %}
@@ -46,7 +46,11 @@
 
           </form>
         </p>
-
+      {% else %}
+        <p>
+            <h1 class="alert alert-success"> Your acc has been created </h1>
+        </p>
+        {% endif%}
     </div>
 
     </p>
