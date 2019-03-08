@@ -18,5 +18,39 @@
 {% endblock %}
 
 {% block content %}
+      <div class="row">
+        <form class="form-group" method="POST">
+            {% csrf_token %}
+          <p>
+        <select class="custom-select" name="type_filter">
+            <option value="0">All</option>
+            {% for type in types %}
+              <option   {% if type.id == types_filter %} selected {% endif %} value="{{type.id}}">{{type.name}}</option>
+            {% endfor %}
+        </select>
+        </p>
+        <input type="submit" class="btn btn-success" value="Filtr"></input>
+        </form>
+        </div>
+  {% for product in products %}
 
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-3">
+
+        <img src="/media/{{product.image}}" class="img-thumbnail"/>
+
+    </div>
+    <div class="col-md-9">
+
+      <div class="text-danger"><strong> {{product.name}}</div> </strong></br>
+      <div class="alert alert-dark"style="color:rgba(160,34,65,1.0);"> {{product.description}} </div>
+
+    </div>
+    <div class="row">
+        <h1>Price: {{product.price}} $</h1>
+      </div>
+  </div>
+</div>
+  {% endfor %}
 {% endblock %}

@@ -10,17 +10,35 @@ from .psValidator import PSWvalid
 
 from .forms import UploadFileForm
 
+
 def index(response):
 
     user_name = None
     user_id = None
-
+    products = None
+    types_filter = 0;
     if response.session.get('user_id'):
         usr = User.objects.get(pk=response.session.get('user_id'))
         user_name = usr.username
         user_id = usr.id
 
+    if response.POST:
+        type_filter = response.POST.get('type_filter','')
+        response.session['type_filter'] = type_filter;
+    if response.session.get('type_filter'):
+        if response.session.get('type_filter') != '0':
+            types_filter = int(response.session.get('type_filter'))
+            type = Type.objects.get(id= response.session.get('type_filter'))
+            products = Product.objects.all().filter(type=type);
+        else: products = Product.objects.all()
+    else: products = Product.objects.all()
+    types = Type.objects.all()
+
+
     context = {
+        'types_filter': types_filter,
+        'types': types,
+        'products': products,
         'user_id': user_id,
         'user_name': user_name,
         'title' : 'Main'
@@ -174,4 +192,8 @@ def add_product(response):
 def add_product_success(response):
 
 
-    return HttpResponse('<h1> Success ! </h1>')
+    context = {
+        'title': 'Success !'
+    }
+
+    return render(response,'add_product_success.html',context)
