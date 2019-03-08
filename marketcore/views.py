@@ -106,13 +106,21 @@ def log_out(response):
 def profile(response,id):
 
     user = None
+    unlock = False
 
     if not User.objects.filter(id= id):
         return HttpResponse('Error there is no user with' + id + " id");
     else:
-        user = User.objects.get(id= id)
+        if not response.session['user_id']:
+            return HttpResponse('You are not logged');
+        else:
+            user = User.objects.get(id= id)
+            uuser = User.objects.get(pk= response.session.get('user_id'))
+            if uuser == user:
+                unlock = True
 
     context = {
+        'unlock': unlock,
         'user': user,
         'title': 'Profile'
     }
@@ -122,4 +130,6 @@ def profile(response,id):
 def add_product(response):
 
 
-    return HttpResponse('Add product')
+
+
+    return render(response,'add_product.html')

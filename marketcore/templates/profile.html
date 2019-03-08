@@ -25,8 +25,9 @@
     <h2><p>Points: {{user.points}} </p> </h2>
     </div>
     <hr>
-    <p> <h2 class="btn btn-success"> ADD PRODUCT </h2></p>
-
+    {% if unlock %}
+    <p> <a href="\add_product\"><h2 class="btn btn-success"> ADD PRODUCT </h2></a></p>
+    {% endif %}
   </div>
 
 

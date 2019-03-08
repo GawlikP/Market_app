@@ -30,7 +30,7 @@ class Type(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length = 500)
     type = models.ForeignKey(Type,null=True,related_name='Type',on_delete=models.SET_NULL)
-    description = models.CharField(max_length = 500)
+    description = models.TextField()
     QUALITY_CHOICES = (
         ('NEW','NEW'),
         ('US_P','USED_PERFECT'),
