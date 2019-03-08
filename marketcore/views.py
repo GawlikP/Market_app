@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth.hashers import make_password, check_password
 
@@ -10,7 +10,14 @@ from .psValidator import PSWvalid
 
 def index(response):
 
+    user_name = None
+
+    if response.session.get('user_id'):
+        usr = User.objects.get(pk=response.session.get('user_id'))
+        user_name = usr.username
+
     context = {
+        'user_name': user_name,
         'title' : 'Main'
     }
 
@@ -65,5 +72,24 @@ def sing_up(response):
 
 def log_in(response):
 
+    error_message = None
+    usr = None
 
-    return render(response,'login.html')
+    if response.POST:
+        usr = response.POST.get('usernameinput','')
+        psw = response.POST.get('passwordinput','')
+        print(usr)
+        if not User.objects.filter(username= usr):
+            error_message = 'There is no user with that username'
+        else:
+            user = User.objects.get(username= usr)
+            if check_password(psw,user.password):
+                response.session['user_id'] = user.pk;
+                print('logged')
+                return HttpResponseRedirect('/')
+    context = {
+        'error_message': error_message,
+        'title': 'User Form',
+    }
+
+    return render(response,'login.html',context)
