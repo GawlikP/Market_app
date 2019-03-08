@@ -1,5 +1,6 @@
 from django.db import models
-
+import os
+from django.conf import settings
 from datetime import datetime
 
 class User(models.Model):
@@ -28,6 +29,15 @@ class Type(models.Model):
         verbose_name_plural = 'Type'
 
 class Product(models.Model):
+
+    def my_awesome_upload_function(instance,filename):
+    #    s =str(settings.STATICFILES_DIRS)
+    #    s = s[2:]
+    #    s = s[:-3]
+    #    print(s)
+        p = '/media/products_imgs/'+str(instance.id)+'/'+ str(filename)
+        return p
+
     name = models.CharField(max_length = 500)
     type = models.ForeignKey(Type,null=True,related_name='Type',on_delete=models.SET_NULL)
     description = models.TextField()
@@ -39,7 +49,7 @@ class Product(models.Model):
         ('BROKE','BROKe'),
     )
     quality = models.CharField(max_length=50, choices=QUALITY_CHOICES,default='NEW')
-    image = models.ImageField(upload_to ='static/products_imgs/',default='static/products_imgs/noname/nn.jpg')
+    image = models.ImageField(upload_to ='imgs/',default='static/products_imgs/noname/nn.jpg')
     seller = models.ForeignKey(User,null=True,related_name='Owner', on_delete=models.SET_NULL);
     price = models.DecimalField(max_digits=10,decimal_places=2);
     buyer = models.ForeignKey(User, null=True,related_name='Buyer', on_delete=models.SET_NULL);
@@ -47,6 +57,8 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name;
+
+
 
     class Meta:
         verbose_name_plural = 'Product'

@@ -157,8 +157,8 @@ def add_product(response):
             print(type)
             print(quality)
             print(price)
-            #if product:
-                #HttpResponseRedirect()
+            if product:
+                return HttpResponseRedirect('/add_product_success/')
 
     types = Type.objects.all();
 
@@ -170,3 +170,8 @@ def add_product(response):
 
 
     return render(response,'add_product.html',context)
+
+def add_product_success(response):
+
+
+    return HttpResponse('<h1> Success ! </h1>')

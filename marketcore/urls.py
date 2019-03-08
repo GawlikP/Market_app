@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^log_in/$',views.log_in,name='log_in'),
     url(r'^log_out/$',views.log_out,name='log_out'),
     url(r'^profile/(?P<id>\d+)/$', views.profile,name='profile'),
-    url(r'^add_product/$',views.add_product,name='profile')
+    url(r'^add_product/$',views.add_product,name='profile'),
+    url(r'^add_product_success/$',views.add_product_success,name='add_product_success'),
 ]
