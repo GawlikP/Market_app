@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^profile/(?P<id>\d+)/$', views.profile,name='profile'),
     url(r'^add_product/$',views.add_product,name='profile'),
     url(r'^add_product_success/$',views.add_product_success,name='add_product_success'),
+    url(r'^buy/(?P<id>\d+)/$',views.buy_product,name='buy_product'),
 ]

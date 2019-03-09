@@ -10,6 +10,7 @@ from .psValidator import PSWvalid
 
 from .forms import UploadFileForm
 
+from decimal import *
 
 def index(response):
 
@@ -17,14 +18,25 @@ def index(response):
     user_id = None
     products = None
     types_filter = 0;
+    max_price = 0
+    min_price = 0
+    alert = None
+
     if response.session.get('user_id'):
         usr = User.objects.get(pk=response.session.get('user_id'))
         user_name = usr.username
         user_id = usr.id
 
+    if response.session.get('alert'):
+        alert = response.session.get('alert')
+
     if response.POST:
         type_filter = response.POST.get('type_filter','')
+        min_price = response.POST.get('min_price','')
+        max_price = response.POST.get('max_price','')
         response.session['type_filter'] = type_filter;
+        response.session['min_price'] = min_price
+        response.session['max_price'] = max_price
     if response.session.get('type_filter'):
         if response.session.get('type_filter') != '0':
             types_filter = int(response.session.get('type_filter'))
@@ -32,10 +44,24 @@ def index(response):
             products = Product.objects.all().filter(type=type);
         else: products = Product.objects.all()
     else: products = Product.objects.all()
+
+
+    if response.session.get('min_price'):
+        min_price = float(response.session.get('min_price'))
+        print(min_price)
+        products = products.filter(price__gt=min_price)
+    if response.session.get('max_price'):
+        max_price = float(response.session.get('max_price'))
+        print(max_price)
+        products = products.filter(price__lt=max_price)
+
     types = Type.objects.all()
 
 
     context = {
+        'alert' : alert,
+        'min_price': min_price,
+        'max_price': max_price,
         'types_filter': types_filter,
         'types': types,
         'products': products,
@@ -197,3 +223,25 @@ def add_product_success(response):
     }
 
     return render(response,'add_product_success.html',context)
+
+def buy_product(response,id):
+
+    user_name = None
+    user_id = None
+
+    if response.session.get('user_id'):
+        usr = User.objects.get(pk=response.session.get('user_id'))
+        user_name = usr.username
+        user_id = usr.id
+    else:
+        response.session['alert'] = 'You need to be loged in to buy product'
+        return HttpResponseRedirect('/')
+
+
+
+    context = {
+        'user_name': user_name,
+        'title':'Buy'
+    }
+
+    return render(response,'buy_product.html',context)

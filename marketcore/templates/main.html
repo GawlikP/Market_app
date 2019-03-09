@@ -21,13 +21,15 @@
       <div class="row">
         <form class="form-group" method="POST">
             {% csrf_token %}
-          <p>
+          <p> <label for="type_filter"><strong>Type:</strong></label>
         <select class="custom-select" name="type_filter">
             <option value="0">All</option>
             {% for type in types %}
-              <option   {% if type.id == types_filter %} selected {% endif %} value="{{type.id}}">{{type.name}}</option>
+              <option {% if type.id == types_filter %} selected {% endif %} value="{{type.id}}">{{type.name}}</option>
             {% endfor %}
-        </select>
+        </select></p>
+        <p><strong>Price:</strong> <input class="form-group" type="text" name="min_price" placeholder="min" {% if min_price %} value="{{min_price}}" {% endif %}/>
+        <strong>-</strong> <input type="text" class="form-group" name="max_price" placeholder="max" {% if max_price %} value="{{max_price}}" {% endif %}/>
         </p>
         <input type="submit" class="btn btn-success" value="Filtr"></input>
         </form>
@@ -45,10 +47,13 @@
 
       <div class="text-danger"><strong> {{product.name}}</div> </strong></br>
       <div class="alert alert-dark"style="color:rgba(160,34,65,1.0);"> {{product.description}} </div>
-
+      <a href="buy/{{product.id}}/" class="btn btn-success">Buy</a>
     </div>
     <div class="row">
         <h1>Price: {{product.price}} $</h1>
+        <from method="post" action="/">
+          {% csrf_token %}
+        </form>
       </div>
   </div>
 </div>

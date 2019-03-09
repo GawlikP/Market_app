@@ -30,14 +30,6 @@ class Type(models.Model):
 
 class Product(models.Model):
 
-    def my_awesome_upload_function(instance,filename):
-    #    s =str(settings.STATICFILES_DIRS)
-    #    s = s[2:]
-    #    s = s[:-3]
-    #    print(s)
-        p = '/media/products_imgs/'+str(instance.id)+'/'+ str(filename)
-        return p
-
     name = models.CharField(max_length = 500)
     type = models.ForeignKey(Type,null=True,related_name='Type',on_delete=models.SET_NULL)
     description = models.TextField()
@@ -62,5 +54,18 @@ class Product(models.Model):
 
     class Meta:
         verbose_name_plural = 'Product'
+
+class Message(models.Model):
+
+    title = models.CharField(max_length= 100)
+    content = models.TextField()
+    to = models.ForeignKey(User,null=True,related_name='To',on_delete=models.SET_NULL)
+    mailer = models.ForeignKey(User,null=True,related_name='From',on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.name;
+
+    class Meta:
+        verbose_name_plural = 'Message'
 
 # Create your models here.
