@@ -30,6 +30,10 @@ def index(response):
 
     if response.session.get('alert'):
         alert = response.session.get('alert')
+        try:
+            del response.session['alert']
+        except KeyError:
+            pass
 
     if response.POST:
         type_filter = response.POST.get('type_filter','')
@@ -149,6 +153,9 @@ def log_in(response):
 def log_out(response):
     try:
         del response.session['user_id']
+        del response.session['type_filter']
+        del response.session['min_price']
+        del response.session['max_price']
     except KeyError:
         pass
     return HttpResponseRedirect("/")
@@ -269,6 +276,12 @@ def buy_accept(response,id):
         user_id = usr.id
     else:
         response.session['alert'] = 'You need to be loged in to buy product'
+        return HttpResponseRedirect('/')
+
+    product = Product.objects.get(id= id)
+
+    if user_id == product.seller.id:
+        response.session['alert'] = 'You can not buy your own product'
         return HttpResponseRedirect('/')
 
     if response.POST:
