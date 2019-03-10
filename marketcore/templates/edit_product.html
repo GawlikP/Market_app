@@ -23,6 +23,7 @@
   <div class="container">
         <h1 class="alert alert-seccondary"><strong class="text-warning">Change price:</strong>
           <form method="post">
+            {% csrf_token %}
             <p><input type="number" step="0.01" required class="form-group" placeholder="{{product.price}}" style="width: 100%"  name="pricefield"> </input> </p>
             <p><input type="submit" class="btn btn-success"  value="Change"></input> </p>
           </form>

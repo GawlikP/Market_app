@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'^buy/(?P<id>\d+)/$',views.buy_product,name='buy_product'),
     url(r'^buy_accept/(?P<id>\d+)/$',views.buy_accept,name='buy_accept'),
     url(r'^messeges/$',views.messeges,name='messeges'),
-    url(r'^edit_product/(?P<id>\d+)/$',views.edit_product,name='edit_product')
+    url(r'^edit_product/(?P<id>\d+)/$',views.edit_product,name='edit_product'),
+    url(r'delete_product/(?P<id>\d+)/$',views.delete_product,name='delete_product'),
 ]

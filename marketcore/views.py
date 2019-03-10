@@ -348,6 +348,12 @@ def edit_product(response,id):
         response.session['alert'] = 'You need to be seller of that product price'
         return HttpResponseRedirect('/')
 
+    if response.POST:
+        new_price = response.POST.get('pricefield','')
+        new_price = float(new_price)
+        product.price = new_price
+        product.save()
+
     context = {
         'product': product,
         'user_id': user_id,
@@ -355,3 +361,39 @@ def edit_product(response,id):
     }
 
     return render(response,'edit_product.html',context)
+
+def delete_product(response, id):
+    if response.session.get('user_id'):
+        usr = User.objects.get(pk=response.session.get('user_id'))
+        user_id = usr.id
+    else:
+        response.session['alert'] = 'You need to be loged in to delete product'
+        return HttpResponseRedirect('/')
+
+    product = Product.objects.get(id= id)
+
+    if product.seller.id != user_id:
+        response.session['alert'] = 'You need to be seller of that product to delete it'
+        return HttpResponseRedirect('/')
+
+
+    if response.POST:
+        password = response.POST.get('password')
+        if check_password(password,usr.password):
+            product = Product.objects.get(id= id)
+            product.delete()
+            print('yep its him')
+            context = {
+                'th':True,
+                'title':'Delete'
+            }
+            return render(response,'delete_product.html',context)
+
+
+    context = {
+        'product':product,
+        'user_id': user_id,
+        'title': 'Delete_product'
+    }
+
+    return render(response,'delete_product.html',context)
