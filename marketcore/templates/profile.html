@@ -27,6 +27,29 @@
     <hr>
     {% if unlock %}
     <p> <a href="\add_product\"><h2 class="btn btn-success"> ADD PRODUCT </h2></a></p>
+
+    {% if your_products %}
+
+      {% for product in your_products %}
+
+        <div class="jumbotron">
+          <div class="row-lg-3">
+            <div class="col-md-3">
+                    <img src="/media/{{product.image}}" class="img-thumbnail"/>
+              </div>
+              <div class="col-md-9">
+                    <p><strong class="alert alert-primary">{{product.name}} </strong> </p>
+                    <p clas="alert alert-success">{{product.description}}</p>
+                    <p class="alert alert-warining">Price{{product.price}}$ <a href="/edit_product/{{product.id}}" class="btn btn-danger">Edit</a></p>
+                    <p class="alert alert-danger">SALED {{product.buyer}} </p>
+                </div>
+            </div>
+        </div>
+
+      {% endfor %}
+
+    {% endif %}
+
     {% endif %}
   </div>
 

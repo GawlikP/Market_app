@@ -164,6 +164,7 @@ def profile(response,id):
 
     user = None
     unlock = False
+    your_products = None
 
     if not User.objects.filter(id= id):
         return HttpResponse('Error there is no user with' + id + " id");
@@ -175,8 +176,11 @@ def profile(response,id):
             uuser = User.objects.get(pk= response.session.get('user_id'))
             if uuser == user:
                 unlock = True
+                your_products = Product.objects.all().filter(seller= uuser)
+
 
     context = {
+        'your_products': your_products,
         'unlock': unlock,
         'user': user,
         'title': 'Profile'
@@ -328,3 +332,26 @@ def messeges(response):
     }
 
     return render(response,'messeges.html',context)
+
+def edit_product(response,id):
+
+    if response.session.get('user_id'):
+        usr = User.objects.get(pk=response.session.get('user_id'))
+        user_id = usr.id
+    else:
+        response.session['alert'] = 'You need to be loged in to edit product price'
+        return HttpResponseRedirect('/')
+
+    product = Product.objects.get(id= id)
+
+    if product.seller.id != user_id:
+        response.session['alert'] = 'You need to be seller of that product price'
+        return HttpResponseRedirect('/')
+
+    context = {
+        'product': product,
+        'user_id': user_id,
+        'title': 'Edit_product'
+    }
+
+    return render(response,'edit_product.html',context)

@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+
+{% block navi %}
+
+<div class="row">
+<a href="/sing_up/" class="btn btn-primary fill_container">Sing up</a> </br>
+</div>
+<div class="row">
+<a href="/log_in/" class="btn btn-primary fill_container">Log in</a> </br>
+</div>
+<div class="row">
+<a href="/log_out/" class="btn btn-primary fill_container">Log out</a> </br>
+</div>
+<div class="row">
+<a href="/messeges/" class="btn btn-primary fill_container">Messeges</a> </br>
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+
+  <div class="container">
+        <h1 class="alert alert-seccondary"><strong class="text-warning">Change price:</strong>
+          <form method="post">
+            <p><input type="number" step="0.01" required class="form-group" placeholder="{{product.price}}" style="width: 100%"  name="pricefield"> </input> </p>
+            <p><input type="submit" class="btn btn-success"  value="Change"></input> </p>
+          </form>
+        </h1>
+    </div>
+
+
+{% endblock%}
