@@ -44,7 +44,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to ='imgs/',default='static/products_imgs/noname/nn.jpg')
     seller = models.ForeignKey(User,null=True,related_name='Owner', on_delete=models.SET_NULL);
     price = models.DecimalField(max_digits=10,decimal_places=2);
-    buyer = models.ForeignKey(User, null=True,related_name='Buyer', on_delete=models.SET_NULL);
+    buyer = models.ForeignKey(User,blank=True, null=True,related_name='Buyer', on_delete=models.SET_NULL);
     added_at = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
@@ -61,9 +61,9 @@ class Message(models.Model):
     content = models.TextField()
     to = models.ForeignKey(User,null=True,related_name='To',on_delete=models.SET_NULL)
     mailer = models.ForeignKey(User,null=True,related_name='From',on_delete=models.SET_NULL)
-
+    send_at = models.DateTimeField(default=datetime.now, blank=True)
     def __str__(self):
-        return self.name;
+        return self.title;
 
     class Meta:
         verbose_name_plural = 'Message'

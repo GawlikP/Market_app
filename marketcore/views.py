@@ -4,9 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth.hashers import make_password, check_password
 
-from .models import User, Type, Product
+from .models import User, Type, Product, Message
 
 from .psValidator import PSWvalid
+from .my_messages_constants import *
 
 from .forms import UploadFileForm
 
@@ -57,6 +58,7 @@ def index(response):
 
     types = Type.objects.all()
 
+    products = products.filter(buyer__isnull=True)
 
     context = {
         'alert' : alert,
@@ -136,6 +138,8 @@ def log_in(response):
                 response.session['user_id'] = user.pk;
                 print('logged')
                 return HttpResponseRedirect('/')
+            else:
+                error_message = 'Unknow combination'
     context = {
         'error_message': error_message,
         'title': 'User Form',
@@ -176,6 +180,7 @@ def profile(response,id):
 def add_product(response):
 
     types = None
+    error_message = None
 
     if not response.session['user_id']:
         return HttpResponse('You need to be loged in');
@@ -185,29 +190,33 @@ def add_product(response):
             print('form too')
             name = response.POST.get('productnameinput','')
             description = response.POST.get('productdescriptioninput','')
-            type = response.POST.get('typeinput','')
-            quality = response.POST.get('quialityinput','')
-            myfile = response.FILES['myfile']
-        # =request.FILES['file']
-            price = response.POST.get('pricefield')
-            price = float(price)
-            type = Type.objects.get(id=type);
-            seller = User.objects.get(id=response.session.get('user_id'))
-            product = Product.objects.create(name=name,type=type,description= description, quality='NEW',price=price, seller=seller,image=myfile)
-            print(product)
-            product.save()
-            print(name)
-            print(description)
-            print(type)
-            print(quality)
-            print(price)
-            if product:
-                return HttpResponseRedirect('/add_product_success/')
+            if response.POST.get('typeinput','') != 'Type':
+                type = response.POST.get('typeinput','')
+                quality = response.POST.get('quialityinput','')
+                myfile = response.FILES['myfile']
+            # =request.FILES['file']
+                price = response.POST.get('pricefield')
+                price = float(price)
+                type = Type.objects.get(id=type);
+                seller = User.objects.get(id=response.session.get('user_id'))
+                product = Product.objects.create(name=name,type=type,description= description, quality='NEW',price=price, seller=seller,image=myfile)
+                print(product)
+                product.save()
+                print(name)
+                print(description)
+                print(type)
+                print(quality)
+                print(price)
+                if product:
+                    return HttpResponseRedirect('/add_product_success/')
+            else:
+                error_message = "Choose type !"
+                print(error_message)
 
     types = Type.objects.all();
 
     context = {
-
+        'error_message': error_message,
         'types': types,
         'title': 'Adding product'
     }
@@ -237,11 +246,72 @@ def buy_product(response,id):
         response.session['alert'] = 'You need to be loged in to buy product'
         return HttpResponseRedirect('/')
 
+    product = Product.objects.get(id= id);
 
 
     context = {
+        'product': product,
         'user_name': user_name,
         'title':'Buy'
     }
 
     return render(response,'buy_product.html',context)
+
+def buy_accept(response,id):
+
+
+    user_id = None
+    usr = None
+    error = None
+
+    if response.session.get('user_id'):
+        usr = User.objects.get(pk=response.session.get('user_id'))
+        user_id = usr.id
+    else:
+        response.session['alert'] = 'You need to be loged in to buy product'
+        return HttpResponseRedirect('/')
+
+    if response.POST:
+        password = response.POST.get('password')
+        if check_password(password,usr.password):
+            product = Product.objects.get(id= id)
+            seller = product.seller
+            product.buyer= usr;
+            product.save()
+            msg = Message.objects.create(title=MM_title_generator(product),content=MM_content_generator(seller.username,product),to=product.buyer,mailer=seller)
+            print('yep its him')
+            msg2 = Message.objects.create(title=MM_Stitle_generator(product),content=MM_Scontent_generator(product.buyer,product),to=seller,mailer=product.buyer)
+            context = {
+                'th':True,
+                'title':'Buy'
+            }
+            return render(response,'buy_accept.html',context)
+        else:
+            error = "Wrong Password !"
+    context = {
+        'error': error,
+        'title':'Buy'
+    }
+
+    return render(response,'buy_accept.html',context)
+
+def messeges(response):
+
+    if response.session.get('user_id'):
+        usr = User.objects.get(pk=response.session.get('user_id'))
+        user_id = usr.id
+        user_name = usr.username
+    else:
+        response.session['alert'] = 'You need to be loged in to check your messeges'
+        return HttpResponseRedirect('/')
+
+    messages = Message.objects.all().filter(to=usr)
+
+
+    context = {
+        'messages': messages,
+        'user_name': user_name,
+        'title':'Messeges'
+    }
+
+    return render(response,'messeges.html',context)

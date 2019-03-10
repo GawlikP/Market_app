@@ -32,6 +32,9 @@
                         <option value="{{t.id}}"> {{t.name}}</option>
                       {% endfor%}
                     </select>
+                    {% if error_message %}
+                      <strong class="alert alert-danger"> {{error_message}} </strong>
+                    {% endif %}
                     <select class="custom-select" name="quialityinput">
                       <option selected>Quality</option>
                       <option value="NEW">NEW</option>

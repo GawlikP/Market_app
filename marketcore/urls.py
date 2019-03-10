@@ -14,4 +14,6 @@ urlpatterns = [
     url(r'^add_product/$',views.add_product,name='profile'),
     url(r'^add_product_success/$',views.add_product_success,name='add_product_success'),
     url(r'^buy/(?P<id>\d+)/$',views.buy_product,name='buy_product'),
+    url(r'^buy_accept/(?P<id>\d+)/$',views.buy_accept,name='buy_accept'),
+    url(r'^messeges/$',views.messeges,name='messeges'),
 ]
