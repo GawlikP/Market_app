@@ -140,7 +140,6 @@ def log_in(response):
             user = User.objects.get(username= usr)
             if check_password(psw,user.password):
                 response.session['user_id'] = user.pk;
-                print('logged')
                 return HttpResponseRedirect('/')
             else:
                 error_message = 'Unknow combination'
@@ -296,7 +295,6 @@ def buy_accept(response,id):
             product.buyer= usr;
             product.save()
             msg = Message.objects.create(title=MM_title_generator(product),content=MM_content_generator(seller.username,product),to=product.buyer,mailer=seller)
-            print('yep its him')
             msg2 = Message.objects.create(title=MM_Stitle_generator(product),content=MM_Scontent_generator(product.buyer,product),to=seller,mailer=product.buyer)
             context = {
                 'th':True,
@@ -382,7 +380,6 @@ def delete_product(response, id):
         if check_password(password,usr.password):
             product = Product.objects.get(id= id)
             product.delete()
-            print('yep its him')
             context = {
                 'th':True,
                 'title':'Delete'
