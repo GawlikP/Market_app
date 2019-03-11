@@ -24,7 +24,7 @@ def index(response):
     alert = None
 
     if response.session.get('user_id'):
-        usr = User.objects.get(pk=response.session.get('user_id'))
+        usr = User.objects.get(id=response.session.get('user_id'))
         user_name = usr.username
         user_id = usr.id
 
@@ -64,6 +64,8 @@ def index(response):
 
     products = products.filter(buyer__isnull=True)
 
+    products = products.order_by('-added_at');
+
     context = {
         'alert' : alert,
         'min_price': min_price,
@@ -75,7 +77,7 @@ def index(response):
         'user_name': user_name,
         'title' : 'Main'
     }
-
+#   price__lt = 0.1
     return render(response,'main.html',context)
 
 def sing_up(response):
@@ -139,7 +141,7 @@ def log_in(response):
         else:
             user = User.objects.get(username= usr)
             if check_password(psw,user.password):
-                response.session['user_id'] = user.pk;
+                response.session['user_id'] = user.id;
                 return HttpResponseRedirect('/')
             else:
                 error_message = 'Unknow combination'
@@ -171,7 +173,7 @@ def profile(response,id):
         if not response.session['user_id']:
             return HttpResponse('You are not logged');
         else:
-            user = User.objects.get(id= id)
+            user = User.objects.get(id= response.session.get('user_id'))
             uuser = User.objects.get(pk= response.session.get('user_id'))
             if uuser == user:
                 unlock = True
