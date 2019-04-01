@@ -170,15 +170,15 @@ def profile(response,id):
     if not User.objects.filter(id= id):
         return HttpResponse('Error there is no user with' + id + " id");
     else:
-        if not response.session['user_id']:
-            return HttpResponse('You are not logged');
-        else:
-            user = User.objects.get(id= response.session.get('user_id'))
-            uuser = User.objects.get(pk= response.session.get('user_id'))
-            if uuser == user:
-                unlock = True
-                your_products = Product.objects.all().filter(seller= uuser)
-
+        try:
+            if response.session['user_id']:
+                user = User.objects.get(id= response.session.get('user_id'))
+                uuser = User.objects.get(pk= response.session.get('user_id'))
+                if uuser == user:
+                    unlock = True
+                    your_products = Product.objects.all().filter(seller= uuser)
+        except:
+            return HttpResponse('You are not logged')
 
     context = {
         'your_products': your_products,
